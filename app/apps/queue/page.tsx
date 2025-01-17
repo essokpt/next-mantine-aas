@@ -1,6 +1,7 @@
 "use client";
 import DataTables from "@/componetes/DataTable/DataTable";
 import { PageContainer } from "@/componetes/PageContainer/PageContainer";
+import { useQueue } from "@/hooks/useQueue";
 import { Queue } from "@/types";
 import { ActionIcon, Badge, Group, Text, Tooltip } from "@mantine/core";
 import { useFetch, useInterval } from "@mantine/hooks";
@@ -84,25 +85,28 @@ const columns: DataTableProps<Queue>['columns'] = [
 ];
 
 export default function Queues() {
-  const {
-    data: record,
-    loading,
-    error,
-    refetch,
-    abort,
-  } = useFetch<Queue[]>("http://127.0.0.1:3005/tasks/queue");
+  // const {
+  //   data: record,
+  //   loading,
+  //   error,
+  //   refetch,
+  //   abort,
+  // } = useFetch<Queue[]>("http://127.0.0.1:3005/tasks/queue");
 
-  const interval = useInterval(
-    () => {
-      console.log('Refesh queue');
-      refetch();
-    },
-    2200,
-    { autoInvoke: true }
-  );
+  const { data:record, isError:error, isFetching, isLoading:loading } = useQueue();
+
+
+  // const interval = useInterval(
+  //   () => {
+  //     console.log('Refesh queue');
+  //     refetch();
+  //   },
+  //   2200,
+  //   { autoInvoke: true }
+  // );
 
   useEffect(() => {
-    interval.start();
+   // interval.start();
     //return interval.stop;
   }, []);
 

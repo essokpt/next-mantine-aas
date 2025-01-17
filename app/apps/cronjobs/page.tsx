@@ -1,6 +1,7 @@
 "use client";
 import DataTables from "@/componetes/DataTable/DataTable";
 import { PageContainer } from "@/componetes/PageContainer/PageContainer";
+import { useCronjob } from "@/hooks/useCronjob";
 import { CronJob } from "@/types";
 import { ActionIcon, Group, Text, Tooltip } from "@mantine/core";
 import { useFetch } from "@mantine/hooks";
@@ -73,13 +74,15 @@ const columns: DataTableProps<CronJob>['columns'] = [
 ];
 
 export default function Cronjob() {
-  const {
-    data: record,
-    loading,
-    error,
-    refetch,
-    abort,
-  } = useFetch<CronJob[]>("http://127.0.0.1:3005/tasks/cronjobs");
+  // const {
+  //   data: record,
+  //   loading,
+  //   error,
+  //   refetch,
+  //   abort,
+  // } = useFetch<CronJob[]>("http://127.0.0.1:3005/tasks/cronjobs");
+    const { data:record, isError:error, isFetching, isLoading:loading } = useCronjob();
+  
   return (
     <PageContainer title="Cron Job">
       <DataTables data={record} error={error} loading={loading} column={columns}/>

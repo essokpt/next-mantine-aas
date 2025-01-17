@@ -1,67 +1,112 @@
 import {
   Anchor,
   Breadcrumbs,
+  BreadcrumbsProps,
+  Button,
   Container,
   type ContainerProps,
   Divider,
+  Flex,
   Group,
   Paper,
   PaperProps,
+  rem,
   Space,
   Stack,
   Text,
   Title,
+  useMantineTheme,
 } from "@mantine/core";
+import { useColorScheme } from "@mantine/hooks";
+import { IconPlus } from "@tabler/icons-react";
 import type { FC, ReactNode } from "react";
 
 type PageContainerProps = {
   children: ReactNode;
   title: string;
-  items?: { label: string; href: string }[];
+  subtitle?: string;
+  breadcrumbItems?: any[];
+  createButton?: boolean;
+  onHandleCreate?: () => void;
 } & Pick<ContainerProps, "fluid">;
 
 const PAPER_PROPS: PaperProps = {
-  p: 'md',
-  shadow: 'md',
-  radius: 'md',
+  p: "md",
+  shadow: "md",
+  radius: "md",
 };
-
 
 export const PageContainer: FC<PageContainerProps> = ({
   children,
   title,
-  items,
+  subtitle,
+  breadcrumbItems,
+  createButton,
+  onHandleCreate,
   fluid = true,
 }) => {
+  const theme = useMantineTheme();
+  const colorScheme = useColorScheme();
+
+  const BREADCRUMBS_PROPS: Omit<BreadcrumbsProps, "children"> = {
+    style: {
+      a: {
+        padding: rem(8),
+        borderRadius: theme.radius.sm,
+        fontWeight: 500,
+        color: colorScheme === "dark" ? theme.white : theme.black,
+
+        "&:hover": {
+          transition: "all ease 150ms",
+          backgroundColor:
+            colorScheme === "dark"
+              ? theme.colors.dark[5]
+              : theme.colors.gray[2],
+          textDecoration: "none",
+        },
+      },
+    },
+  };
+
   return (
     <Container px={0} fluid>
       <Stack gap="lg">
-        {items && items.length > 0 ? (
-          <Breadcrumbs>
-            {items.map((item) => (
-              <Anchor key={item.label} href={item.href}>
-                {item.label}
-              </Anchor>
-            ))}
-          </Breadcrumbs>
+        <Title order={3}>{title}</Title>
+
+        { createButton ? ( 
+          <Flex
+            align="center"
+            justify="space-between"
+            direction={{ base: "row", sm: "row" }}
+            gap={{ base: "sm", sm: 4 }}
+          >
+            <Stack>
+              <Breadcrumbs {...BREADCRUMBS_PROPS}>
+                {breadcrumbItems}
+              </Breadcrumbs>
+            </Stack>
+            <Button
+              leftSection={<IconPlus size={18} />}
+              onClick={onHandleCreate}
+            >
+              {`New ${title}`}
+            </Button>
+          </Flex>
         ) : null}
 
-
-        <Title order={3}>{title}</Title>
         <Divider />
-        
 
         {/* <PageHeader title="Orders" breadcrumbItems={items} /> */}
         <Paper {...PAPER_PROPS}>
           <Group justify="space-between" mb="md">
             <Text fz="lg" fw={600}>
-             {title}
+              {subtitle}
             </Text>
             {/* <ActionIcon>
                 <IconDotsVertical size={18} />
               </ActionIcon> */}
           </Group>
-       
+
           {children}
         </Paper>
       </Stack>

@@ -84,7 +84,7 @@ type TaskTableProps = {
   data?: any;
   error?: ReactNode;
   loading?: boolean;
-  onRowEdit?: (data:any) => void;
+  onRowEdit: (data:any) => void;
 };
 
 const TaskScheduleTable = ({
@@ -153,7 +153,7 @@ const TaskScheduleTable = ({
           <Tooltip label="Edit task">
             <ActionIcon>
               <IconEdit size={ICON_SIZE}
-              // onClick={() => onRowEdit(item)}
+               onClick={() => onRowEdit(item)}
                />
 
             </ActionIcon>
@@ -163,15 +163,15 @@ const TaskScheduleTable = ({
               <IconTrash size={ICON_SIZE} />
             </ActionIcon>
           </Tooltip>
-          <Tooltip label="View invoice details">
+          {/* <Tooltip label="View invoice details">
             <ActionIcon
-              // onClick={() =>
-              //   router.push(PATH_INVOICES.invoices.invoice_details(item.id))
-              // }
+              onClick={() =>
+                router.push(PATH_INVOICES.invoices.invoice_details(item.id))
+              }
             >
               <IconEye size={ICON_SIZE} />
             </ActionIcon>
-          </Tooltip>
+          </Tooltip> */}
         </Group>
       ),
     },
