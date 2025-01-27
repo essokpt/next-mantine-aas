@@ -86,6 +86,7 @@ type TaskTableProps = {
   error?: any;
   loading?: boolean;
   onRowEdit?: (data:any) => void;
+ 
 };
 
 const DataTables = ({
@@ -93,7 +94,7 @@ const DataTables = ({
   column,
   error,
   loading,
-  onRowEdit,
+  onRowEdit,  
 }: TaskTableProps) => {
   const theme = useMantineTheme();
   const [page, setPage] = useState(1);
@@ -115,10 +116,18 @@ const DataTables = ({
   // }, [data]);
 
   
-
   useEffect(() => {
     setPage(1);
   }, [pageSize]);
+
+  useEffect(() => {    
+    const from = (page - 1) * pageSize;
+        const to = from + pageSize;
+        // const d = sortBy(data, sortStatus.columnAccessor) as TaskSchedule[];
+        //const dd = sortStatus.direction === 'desc' ? d.reverse() : d;
+        let filtered = data?.slice(from, to) as TaskSchedule[];
+        setRecords(filtered);
+  }, [ data, page, pageSize, debouncedQuery, selectedStatuses]);
 
   useEffect(() => {
     const from = (page - 1) * pageSize;
@@ -164,7 +173,7 @@ const DataTables = ({
       highlightOnHover
       // @ts-ignore
       columns={column}
-      records={data}
+      records={records}
       selectedRecords={selectedRecords}
       // @ts-ignore
       onSelectedRecordsChange={setSelectedRecords}

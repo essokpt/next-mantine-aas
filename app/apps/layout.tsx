@@ -3,6 +3,7 @@
 import {
   AppShell,
   Burger,
+  Button,
   Container,
   Group,
   Text,
@@ -14,6 +15,7 @@ import { AdminHeader } from "@/componetes/Headers/AdminHeader";
 import { Navbar } from "@/componetes/Navbar/Navbar";
 import { navLinks } from "@/config";
 import classes from "@/styles/App.module.css";
+import { Notifications, notifications } from "@mantine/notifications";
 
 interface Props {
   children: React.ReactNode;
@@ -36,6 +38,7 @@ export default function DashboardLayout({ children }: Props) {
       transitionTimingFunction="ease"
     >
       <AppShell.Navbar>
+     
         <Navbar data={navLinks} hidden={!opened} />
       </AppShell.Navbar>
       <AppShell.Header>
@@ -51,7 +54,10 @@ export default function DashboardLayout({ children }: Props) {
           }
         />
       </AppShell.Header>
-      <AppShell.Main className={classes.main}>{children}</AppShell.Main>
+      <AppShell.Main className={classes.main}>
+       
+        {children}
+      </AppShell.Main>
       <AppShell.Footer p="md">
         <Text w="full" ta="right" size="sm">
           &copy;&nbsp;{new Date().getFullYear()}

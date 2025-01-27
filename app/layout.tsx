@@ -1,14 +1,14 @@
 import "@mantine/core/styles.css";
 import React from "react";
-import {
-  MantineProvider,
-  ColorSchemeScript,
-  Notification,
-} from "@mantine/core";
+import { MantineProvider, ColorSchemeScript } from "@mantine/core";
 import { spaceGrotesk } from "../styles/fonts";
 import { theme } from "@/styles/theme";
 import { ModalsProvider } from "@mantine/modals";
 import { AppProvider } from "./provider";
+import { Notifications } from "@mantine/notifications";
+import 'mantine-datatable/styles.layer.css';
+import '@mantine/notifications/styles.css';
+//import 'react-js-cron/dist/styles.css';
 
 export default function RootLayout({
   children,
@@ -26,12 +26,11 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="light">
+       
           <ModalsProvider>
             <AppProvider>{children}</AppProvider>
-            {/* <Analytics /> */}
           </ModalsProvider>
-
-          <Notification />
+          <Notifications />
         </MantineProvider>
       </body>
     </html>

@@ -72,28 +72,29 @@ export const PageContainer: FC<PageContainerProps> = ({
     <Container px={0} fluid>
       <Stack gap="lg">
         <Title order={3}>{title}</Title>
-
-        { createButton ? ( 
-          <Flex
-            align="center"
-            justify="space-between"
-            direction={{ base: "row", sm: "row" }}
-            gap={{ base: "sm", sm: 4 }}
-          >
+        <Flex
+          align="center"
+          justify="space-between"
+          direction={{ base: "row", sm: "row" }}
+          gap={{ base: "sm", sm: 4 }}
+        >
+          {breadcrumbItems ? (
             <Stack>
               <Breadcrumbs {...BREADCRUMBS_PROPS}>
                 {breadcrumbItems}
               </Breadcrumbs>
             </Stack>
+          ) : null}
+
+          {createButton ? (
             <Button
               leftSection={<IconPlus size={18} />}
               onClick={onHandleCreate}
             >
               {`New ${title}`}
             </Button>
-          </Flex>
-        ) : null}
-
+          ) : null}
+        </Flex>
         <Divider />
 
         {/* <PageHeader title="Orders" breadcrumbItems={items} /> */}

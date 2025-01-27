@@ -23,7 +23,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import sortBy from 'lodash/sortBy';
-import { AppStatus, TaskSchedule } from '@/types';
+import { TaskSchedule, AppStatus } from '@/types';
 import { useDebouncedValue } from '@mantine/hooks';
 import {
   IconCloudDownload,
@@ -33,8 +33,9 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
+import ErrorAlert from '../ErrorAlert';
 //import { PATH_INVOICES } from '@/routes';
-import  ErrorAlert  from '@/componetes/ErrorAlert';
+//import { ErrorAlert } from '@/components';
 
 const PAGE_SIZES = [5, 10, 20];
 
@@ -85,6 +86,8 @@ type TaskTableProps = {
   error?: ReactNode;
   loading?: boolean;
   onRowEdit: (data:any) => void;
+  onRowDelete: (data:any) => void;
+
 };
 
 const TaskScheduleTable = ({
@@ -92,6 +95,7 @@ const TaskScheduleTable = ({
   error,
   loading,
   onRowEdit,
+  onRowDelete,
 }: TaskTableProps) => {
   const theme = useMantineTheme();
   const [page, setPage] = useState(1);
@@ -100,7 +104,7 @@ const TaskScheduleTable = ({
   const [records, setRecords] = useState<TaskSchedule[]>();
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
     columnAccessor: 'name',
-    direction: 'desc',
+    direction: 'asc',
   });
   const [query, setQuery] = useState('');
   const [debouncedQuery] = useDebouncedValue(query, 200);
@@ -160,7 +164,7 @@ const TaskScheduleTable = ({
           </Tooltip>
           <Tooltip label="Delete task">
             <ActionIcon>
-              <IconTrash size={ICON_SIZE} />
+              <IconTrash size={ICON_SIZE}  onClick={() => onRowDelete(item)}/>
             </ActionIcon>
           </Tooltip>
           {/* <Tooltip label="View invoice details">
@@ -219,7 +223,7 @@ const TaskScheduleTable = ({
     <ErrorAlert title="Error loading invoices" message={error.toString()} />
   ) : (
     <DataTable
-      minHeight={200}
+      minHeight={150}
       verticalSpacing="xs"
       striped
       highlightOnHover
@@ -229,14 +233,14 @@ const TaskScheduleTable = ({
       selectedRecords={selectedRecords}
       // @ts-ignore
       onSelectedRecordsChange={setSelectedRecords}
-      totalRecords={ data?.length }
+      totalRecords={data?.length}
       recordsPerPage={pageSize}
       page={page}
       onPageChange={(p) => setPage(p)}
       recordsPerPageOptions={PAGE_SIZES}
       onRecordsPerPageChange={setPageSize}
       sortStatus={sortStatus}
-      onSortStatusChange={setSortStatus}
+      //onSortStatusChange={setSortStatus}
       fetching={loading}
     />
   );

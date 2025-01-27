@@ -41,6 +41,7 @@ export interface CronJob {
 }
 
 export type TaskSchedule = {
+  id: number;
   name: string;
   description: string;
   fileName: string;
