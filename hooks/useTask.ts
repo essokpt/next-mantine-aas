@@ -31,7 +31,7 @@ const useCreateTask = () => {
 
 //UPDATE hook (put user in api)
 const useUpdateTask = () => {
- // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (task: TaskSchedule) => updateTaskFn(task),
     //client side optimistic update
@@ -40,10 +40,12 @@ const useUpdateTask = () => {
       console.log("mutation update:", newTask);     
     },
     onSuccess: (newTask) => {
-     // queryClient.setQueryData(["tasks"], (prev: any) => [...prev, newTask]);
-      queryClient.setQueryData(["tasks"], (prevTasks: any) =>
-        prevTasks?.map((task: any) => task.id == newTask.id ? newTask : prevTasks )
-      );
+      console.log("update success:");     
+    //  // queryClient.setQueryData(["tasks"], (prev: any) => [...prev, newTask]);
+    //   queryClient.setQueryData(["tasks"], (prevTasks: any) => {
+    //     console.log("prevTasks:", prevTasks)
+    //     prevTasks?.map((task: any) => task.id == newTask.id ? prevTasks: newTask )
+    // });
     },
     onError: (err, newTodo, context) => {
       console.log("mutation error:", err);

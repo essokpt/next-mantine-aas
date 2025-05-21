@@ -1,7 +1,7 @@
 "use client";
 
 import { ScrollArea } from "@mantine/core";
-import { UserButton } from "@/componetes/UserButton/UserButton";
+import { UserButton } from "@/components/UserButton/UserButton";
 import type { NavItem } from "@/types";
 import { NavLinksGroup } from "./NavLinksGroup";
 import classes from "./Navbar.module.css";

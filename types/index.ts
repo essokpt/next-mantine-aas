@@ -1,5 +1,12 @@
 import type  {IconProps, TablerIcon}  from "@tabler/icons-react";
 
+export interface MessageType {
+  id: number
+  filename : String 
+  size : String
+  type : String  
+  path : String
+}
 
 export interface NavItem {
   label: string;
@@ -16,6 +23,7 @@ export interface Queue {
     taskName: string;
     fileName: string;
     schedule: string;
+    chanel: string;
   };
   opts: {
     attempts: number;
@@ -47,6 +55,7 @@ export type TaskSchedule = {
   fileName: string;
   time: string;
   enable: boolean;
+  chanel: string;
 }
 
 export type AppStatus =

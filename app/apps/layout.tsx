@@ -11,8 +11,8 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { AdminHeader } from "@/componetes/Headers/AdminHeader";
-import { Navbar } from "@/componetes/Navbar/Navbar";
+import { AdminHeader } from "@/components/Headers/AdminHeader";
+import { Navbar } from "@/components/Navbar/Navbar";
 import { navLinks } from "@/config";
 import classes from "@/styles/App.module.css";
 import { Notifications, notifications } from "@mantine/notifications";

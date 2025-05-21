@@ -1,6 +1,6 @@
 "use client";
-import DataTables from "@/componetes/DataTable/DataTable";
-import { PageContainer } from "@/componetes/PageContainer/PageContainer";
+import DataTables from "@/components/DataTable/DataTable";
+import { PageContainer } from "@/components/PageContainer/PageContainer";
 import { useCronjob, useDeleteCronjob, useUpdateCronJob } from "@/hooks/useCronjob";
 import useFetchData from "@/hooks/useFetchData";
 import { CronJob } from "@/types";
@@ -115,18 +115,6 @@ export default function Cronjob() {
       sortable: true,
       render: (item: any) => <Text>{item.next}</Text>,
     },
-    // {
-    //   accessor: 'status',
-    //   sortable: true,
-    //   render: (item: TaskSchedule) => (
-    //     <StatusBadge status={item.enable ? 'active' : 'inactive'} />
-    //   ),
-
-    //   render: (item: any) => <Text>{item.enable ? 'Active' : 'Inactive'}</Text>,
-    // },
-    // {
-    //   accessor: 'issue_date',
-    // },
     {
       accessor: "",
       title: "Actions",

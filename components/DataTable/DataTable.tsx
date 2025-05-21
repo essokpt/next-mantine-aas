@@ -34,7 +34,7 @@ import {
 } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 //import { PATH_INVOICES } from '@/routes';
-import  ErrorAlert  from '@/componetes/ErrorAlert';
+import  ErrorAlert  from '@/components/ErrorAlert';
 
 const PAGE_SIZES = [5, 10, 20];
 

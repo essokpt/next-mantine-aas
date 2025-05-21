@@ -1,17 +1,38 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 //import ky from "ky";
 import { CronJob, Queue } from "@/types";
-import { deleteCronJobFn, getCronJobFn, updateCronJobFn } from "@/services/api/cronjobApi";
+import { createCronJobFn, deleteCronJobFn, getCronJobFn, updateCronJobFn } from "@/services/api/cronjobApi";
 import queryClient from "./queryClient";
+
+//CREATE hook (post new user to api)
+export const useCreateJob = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (job: CronJob) => createCronJobFn(job),
+    onSuccess: (job: any) => {
+      console.log("mutation onsucess:", job);
+      queryClient.invalidateQueries({ queryKey: ["cronjob"] });
+    },
+    onError: (error) => {
+      console.log("mutation onError:", error.message);
+    },
+    //client side optimistic update
+    onMutate: (newTask: CronJob) => {
+      console.log("mutation create...:");
+    },
+    //refetch after mutation, disabled for demo
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['cronjob'] }),
+  });
+};
 
 //UPDATE hook (put user in api)
 export const useUpdateCronJob = () => {
-  // const queryClient = useQueryClient();
+   const queryClient = useQueryClient();
    return useMutation({
      mutationFn: async (job: CronJob) => updateCronJobFn(job),
      //client side optimistic update
      onMutate: async (newjob) => {     
-       queryClient.setQueryData(["jobs"], (prev: any) => [...prev, newjob]);
+     //  queryClient.setQueryData(["jobs"], (prev: any) => [...prev, newjob]);
        console.log("mutation update:", newjob);     
      },
      onSuccess: (newjob) => {

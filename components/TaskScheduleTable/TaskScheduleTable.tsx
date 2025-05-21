@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import {
   DataTable,
   DataTableProps,
   DataTableSortStatus,
-} from 'mantine-datatable';
+} from "mantine-datatable";
 import {
   ActionIcon,
   Avatar,
@@ -21,19 +21,21 @@ import {
   Tooltip,
   UnstyledButton,
   useMantineTheme,
-} from '@mantine/core';
-import sortBy from 'lodash/sortBy';
-import { TaskSchedule, AppStatus } from '@/types';
-import { useDebouncedValue } from '@mantine/hooks';
+} from "@mantine/core";
+import sortBy from "lodash/sortBy";
+import { TaskSchedule, AppStatus } from "@/types";
+import { useDebouncedValue } from "@mantine/hooks";
 import {
   IconCloudDownload,
   IconEdit,
   IconEye,
+  IconPlus,
   IconSearch,
+  IconTransform,
   IconTrash,
-} from '@tabler/icons-react';
-import { useRouter } from 'next/navigation';
-import ErrorAlert from '../ErrorAlert';
+} from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import ErrorAlert from "../ErrorAlert";
 //import { PATH_INVOICES } from '@/routes';
 //import { ErrorAlert } from '@/components';
 
@@ -46,32 +48,32 @@ type StatusBadgeProps = {
 };
 
 const StatusBadge = ({ status }: StatusBadgeProps) => {
-  let color: MantineColor = '';
+  let color: MantineColor = "";
 
   switch (status) {
-    case 'sent':
-      color = 'blue';
+    case "sent":
+      color = "blue";
       break;
-    case 'suspended':
-      color = 'gray';
+    case "suspended":
+      color = "gray";
       break;
-    case 'cancelled':
-      color = 'red';
+    case "cancelled":
+      color = "red";
       break;
-    case 'disable':
-      color = 'red';
+    case "disable":
+      color = "red";
       break;
-    case 'approved':
-      color = 'green.8';
+    case "approved":
+      color = "green.8";
       break;
-    case 'active':
-      color = 'green.8';
+    case "active":
+      color = "green.8";
       break;
-    case 'pending':
-      color = 'cyan.7';
+    case "pending":
+      color = "cyan.7";
       break;
     default:
-      color = 'dark';
+      color = "dark";
   }
 
   return (
@@ -85,9 +87,9 @@ type TaskTableProps = {
   data?: any;
   error?: ReactNode;
   loading?: boolean;
-  onRowEdit: (data:any) => void;
-  onRowDelete: (data:any) => void;
-
+  onRowEdit: (data: any) => void;
+  onRowDelete: (data: any) => void;
+  onRowCreate: (data: any) => void;
 };
 
 const TaskScheduleTable = ({
@@ -96,6 +98,7 @@ const TaskScheduleTable = ({
   loading,
   onRowEdit,
   onRowDelete,
+  onRowCreate,
 }: TaskTableProps) => {
   const theme = useMantineTheme();
   const [page, setPage] = useState(1);
@@ -103,10 +106,10 @@ const TaskScheduleTable = ({
   const [selectedRecords, setSelectedRecords] = useState<TaskSchedule[]>([]);
   const [records, setRecords] = useState<TaskSchedule[]>();
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
-    columnAccessor: 'name',
-    direction: 'asc',
+    columnAccessor: "name",
+    direction: "asc",
   });
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebouncedValue(query, 200);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const router = useRouter();
@@ -116,32 +119,36 @@ const TaskScheduleTable = ({
   //   return [...statuses];
   // }, [data]);
 
-  const columns: DataTableProps<TaskSchedule>['columns'] = [
-    
+  const columns: DataTableProps<TaskSchedule>["columns"] = [
     {
-      accessor: 'name',
+      accessor: "name",
       render: (item: any) => <Text>#{item.name}</Text>,
     },
     {
-      accessor: 'description',
+      accessor: "description",
       sortable: true,
       render: (item: any) => <Text>{item.description}</Text>,
     },
     {
-      accessor: 'fileName',
+      accessor: "fileName",
       sortable: true,
       render: (item: any) => <Text>{item.fileName}</Text>,
     },
     {
-      accessor: 'time',
+      accessor: "time",
       sortable: true,
       render: (item: any) => <Text>{item.time}</Text>,
     },
     {
-      accessor: 'status',
+      accessor: "chanel",
+      sortable: true,
+      render: (item: any) => <Text>{item.chanel}</Text>,
+    },
+    {
+      accessor: "status",
       sortable: true,
       render: (item: TaskSchedule) => (
-        <StatusBadge status={item.enable ? 'active' : 'inactive'} />
+        <StatusBadge status={item.enable ? "active" : "inactive"} />
       ),
 
       //render: (item: any) => <Text>{item.enable ? 'Active' : 'Inactive'}</Text>,
@@ -150,21 +157,24 @@ const TaskScheduleTable = ({
     //   accessor: 'issue_date',
     // },
     {
-      accessor: '',
-      title: 'Actions',
+      accessor: "",
+      title: "Actions",
       render: (item: any) => (
         <Group gap="sm">
-          <Tooltip label="Edit task">
+          <Tooltip label="Create Job">
             <ActionIcon>
-              <IconEdit size={ICON_SIZE}
-               onClick={() => onRowEdit(item)}
-               />
-
+              <IconTransform size={ICON_SIZE} onClick={() => onRowCreate(item)} />
             </ActionIcon>
           </Tooltip>
+          <Tooltip label="Edit task">
+            <ActionIcon>
+              <IconEdit size={ICON_SIZE} onClick={() => onRowEdit(item)} />
+            </ActionIcon>
+          </Tooltip>
+
           <Tooltip label="Delete task">
             <ActionIcon>
-              <IconTrash size={ICON_SIZE}  onClick={() => onRowDelete(item)}/>
+              <IconTrash size={ICON_SIZE} onClick={() => onRowDelete(item)} />
             </ActionIcon>
           </Tooltip>
           {/* <Tooltip label="View invoice details">
@@ -189,7 +199,7 @@ const TaskScheduleTable = ({
     const from = (page - 1) * pageSize;
     const to = from + pageSize;
     const d = sortBy(data, sortStatus.columnAccessor) as TaskSchedule[];
-    const dd = sortStatus.direction === 'desc' ? d.reverse() : d;
+    const dd = sortStatus.direction === "desc" ? d.reverse() : d;
     let filtered = dd.slice(from, to) as TaskSchedule[];
 
     // if (debouncedQuery || selectedStatuses.length) {

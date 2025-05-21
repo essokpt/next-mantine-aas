@@ -1,10 +1,11 @@
 "use client";
-import { PageContainer } from "@/componetes/PageContainer/PageContainer";
-import TaskScheduleTable from "@/componetes/TaskScheduleTable/TaskScheduleTable";
+import { PageContainer } from "@/components/PageContainer/PageContainer";
+import TaskScheduleTable from "@/components/TaskScheduleTable/TaskScheduleTable";
 import { Cron } from "react-js-cron-mantine";
 import {
   Alert,
   Anchor,
+  Autocomplete,
   Button,
   CheckIcon,
   Group,
@@ -12,17 +13,15 @@ import {
   LoadingOverlay,
   Modal,
   Notification,
+  Select,
   Switch,
   Text,
   Textarea,
   TextInput,
 } from "@mantine/core";
-
 import { useState } from "react";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
-import { notifications } from "@mantine/notifications";
-import { IconAlertCircle, IconCheck } from "@tabler/icons-react";
 
 import {
   useCreateTask,
@@ -30,7 +29,8 @@ import {
   useGetTasks,
   useUpdateTask,
 } from "@/hooks/useTask";
-import { repeat } from "lodash";
+import { useCreateJob } from "@/hooks/useCronjob";
+import { useFetchMessage } from "@/hooks/useMessage";
 
 const items = [
   { title: "Dashboard", href: "/" },
@@ -48,6 +48,12 @@ export default function Tasks() {
   const [timeschedule, setTimeschedule] = useState("* * * * * *");
 
   const {
+    data: messages,
+    isError: isMessagesError,
+    isFetching: isFetchMessages,
+    isLoading: loadingMessages,
+  } = useFetchMessage();
+  const {
     data: record,
     isError: error,
     isFetching,
@@ -55,6 +61,8 @@ export default function Tasks() {
   } = useGetTasks();
   const { mutateAsync: createTask, isSuccess: isCreateSuccess } =
     useCreateTask();
+  const { mutateAsync: createJob, isSuccess: isCreateJobSuccess } =
+    useCreateJob();
   const { mutateAsync: deleteTask, isSuccess: isDeleteSuccess } =
     useDeleteTask();
   const {
@@ -75,6 +83,7 @@ export default function Tasks() {
       fileName: "",
       enable: true,
       repeat: false,
+      chanel: '1'
     },
   });
 
@@ -85,6 +94,7 @@ export default function Tasks() {
 
     if (values.id > 0) {
       console.log("Update task:", values);
+      //values.chanel = parseInt(values.chanel)
       await updateTask(values);
     } else {
       await createTask(values);
@@ -114,7 +124,7 @@ export default function Tasks() {
         setOpen(false);
       }
       setOnLoading(false);
-    }, 2000);
+    }, 1000);
   };
 
   const editTask = (item: any) => {
@@ -126,6 +136,7 @@ export default function Tasks() {
       time: timeschedule,
       fileName: item.fileName,
       enable: item.enable,
+      chanel: item.chanel
     });
     setOpen(true);
   };
@@ -145,19 +156,35 @@ export default function Tasks() {
       onConfirm: () => confirmDelete(item.name),
     });
 
+  const openCreateJobModal = (item: any) =>
+    modals.openConfirmModal({
+      title: "Create Job",
+      size: "md",
+      radius: "md",
+      withCloseButton: false,
+      centered: true,
+      children: (
+        <Text size="sm">
+          Are your shur to convert this task? : {item.name} to Cron Job.
+        </Text>
+      ),
+      labels: { confirm: "Confirm", cancel: "Cancel" },
+      onCancel: () => console.log("Cancel"),
+      onConfirm: () => confirmCreateJob(item),
+    });
+
+  const confirmCreateJob = async (job: any) => {
+    await createJob(job);
+  };
+
   const confirmDelete = async (name: any) => {
     await deleteTask(name);
-    // if (isDeleteSuccess) {
-    //   notifications.show({
-    //     id: "delete-task",
-    //     title: "Delete Task",
-    //     message: "Task delete sucessfully.",
-    //     withCloseButton: false,
-    //     loading: false,
-    //     autoClose: 3000,
-    //   });
-    // }
   };
+
+  const messagesString = messages?.map((v: any) => ({
+    label: v.filename,
+    value: v.filename,
+  }));
 
   return (
     <PageContainer
@@ -177,6 +204,7 @@ export default function Tasks() {
         loading={isFetching}
         onRowEdit={(data) => editTask(data)}
         onRowDelete={(data) => openDeleteModal(data)}
+        onRowCreate={(data) => openCreateJobModal(data)}
       />
       <Modal
         opened={opened}
@@ -227,11 +255,34 @@ export default function Tasks() {
           <Cron value={timeschedule} setValue={setTimeschedule} />
 
           <br />
-          <TextInput
+          {/* <TextInput
             withAsterisk
             label="File Name"
             key={form.key("fileName")}
             {...form.getInputProps("fileName")}
+          /> */}
+          <Select
+            label="Selete your file."
+            key={form.key("fileName")}
+            {...form.getInputProps("fileName")}
+            placeholder="Please value or enter of file"
+            data={messagesString}
+            searchable
+          />
+
+          <Select
+            label="Selete zone triger number."
+            key={form.key("chanel")}
+            {...form.getInputProps("chanel")}
+            placeholder="Please value or enter of zone trigger number"
+           // onChange={(e) => form.setValues({ chanel: parseInt(e)})}
+            data={[
+              { label: "Chenel-01", value: "1" },
+              { label: "Chenel-02", value: "2" },
+              { label: "Chenel-03", value: "3" },
+              { label: "Chenel-04", value: "4" },
+            ]}
+            searchable
           />
 
           <Switch
@@ -242,7 +293,7 @@ export default function Tasks() {
           />
 
           <Group justify="flex-end" mt="md">
-            <Alert
+            {/* <Alert
               hidden={!isUpdateError}
               icon={<IconAlertCircle size={16} />}
               title="Bummer!"
@@ -250,7 +301,7 @@ export default function Tasks() {
             >
               Something terrible happened! You made a mistake and there is no
               going back, your data was lost forever!
-            </Alert>
+            </Alert> */}
 
             <Button type="submit">Submit</Button>
           </Group>

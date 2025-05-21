@@ -1,12 +1,13 @@
 import { api } from "../axiosInstance";
 
-const endpoint = "/tasks/cronjob";
+const endpoint = "/message";
 
 //export const getCustomer = (url: string) =>  axios.get(url).then((res) => res.data);
-
-export async function getCronJobFn() {
+export async function getStreamMessageFn(filename: string) {
   try {
-    const response = await api.get(endpoint);
+    const response = await api.get(`${endpoint}/fileStream/${filename}`, {
+      responseType: "blob",
+    });
     const res = await response.data;
     return res;
   } catch (error) {
@@ -14,7 +15,20 @@ export async function getCronJobFn() {
   }
 }
 
-export async function findCronJobFn(id: any) {
+export async function getMessageFn() {
+  try {
+    const response = await api.get(endpoint);
+    const res = await response.data;
+
+    console.log('get message array', res);
+    
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function findMessageFn(id: any) {
   try {
     const response = await api.get(`${endpoint}/${id}`);
     const res = await response.data;
@@ -24,33 +38,32 @@ export async function findCronJobFn(id: any) {
   }
 }
 
-export async function createCronJobFn(data: any) {
+export async function uploadMessageFn(files: any) {
   try {
-    const newJob = {
-      //id : 100,
-      name : data.name,
-      description : data.description,
-      time : data.time,
-      fileName : data.fileName,
-      enable : data.enable,
-      repeat : false
+   
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
     }
-    const response = await api.post(endpoint, newJob);
+    const response = await api.post(endpoint, files,
+      {
+        headers: headers 
+    });
+    
     const res = await response.data;
-    console.log('createCronJobFn:',response);
+    console.log('createMessageFn:',response);
     return res;
   } catch (error) {
     console.error(error);
   }
 }
 
-export async function updateCronJobFn(data: any) {
+export async function updateMessageFn(data: any) {
  // return { data } = await api.patch(endpoint, data);
   try {
     const response = await api.patch(endpoint, data);
     
     const res = await response.data;
-    console.log("update cronjob", res);
+    console.log("update Message", res);
      return res;
   } catch (error:any) {
     console.error('error',error.message);
@@ -58,11 +71,11 @@ export async function updateCronJobFn(data: any) {
   }
 }
 
-export async function deleteCronJobFn(name: any) {
+export async function deleteMessageFn(name: any) {
   // console.error('login',data);
   try {
     const response = await api.delete(`${endpoint}/${name}`);
-    console.log("delete Task", response.status);
+    console.log("delete message", response.status);
     return response;
   } catch (error) {
     console.error(error);

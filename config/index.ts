@@ -2,7 +2,9 @@ import {
   IconComponents,
   IconDashboard,
   IconLock,
+  IconMessage,
   IconMoodSmile,
+	IconMusic,
 	IconQuotes,
 	IconSubtask,
 } from "@tabler/icons-react";
@@ -25,45 +27,49 @@ export const navLinks: NavItem[] = [
 		icon: IconQuotes,
 		link: "/apps/queue"
 	},
-  {
-    label: "Components",
-    icon: IconComponents,
-    initiallyOpened: true,
-    links: [
-      {
-        label: "Table",
-        link: "/dashboard/table",
-      },
-      {
-        label: "Form",
-        link: "/dashboard/form",
-      },
-    ],
-  },
-  {
-    label: "Auth",
-    icon: IconLock,
-    initiallyOpened: true,
-    links: [
-      {
-        label: "Login",
-        link: "/login",
-      },
-      {
-        label: "Register",
-        link: "/register",
-      },
-    ],
-  },
-  {
-    label: "Sample",
-    icon: IconMoodSmile,
-    initiallyOpened: true,
-    links: [
-      {
-        label: "Landing",
-        link: "/",
-      },
-    ],
-  },
+  { label: "Message",
+		icon: IconMusic,
+		link: "/apps/message"
+	},
+  // {
+  //   label: "Components",
+  //   icon: IconComponents,
+  //   initiallyOpened: true,
+  //   links: [
+  //     {
+  //       label: "Table",
+  //       link: "/dashboard/table",
+  //     },
+  //     {
+  //       label: "Form",
+  //       link: "/dashboard/form",
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: "Auth",
+  //   icon: IconLock,
+  //   initiallyOpened: true,
+  //   links: [
+  //     {
+  //       label: "Login",
+  //       link: "/login",
+  //     },
+  //     {
+  //       label: "Register",
+  //       link: "/register",
+  //     },
+  //   ],
+  // },
+  // {
+  //   label: "Sample",
+  //   icon: IconMoodSmile,
+  //   initiallyOpened: true,
+  //   links: [
+  //     {
+  //       label: "Landing",
+  //       link: "/",
+  //     },
+  //   ],
+  // },
 ];

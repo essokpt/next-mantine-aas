@@ -50,7 +50,7 @@ export async function updateTaskFn(data: any) {
     const response = await api.patch(endpoint, data);
     
     const res = await response.data;
-    console.log("update Task", res);
+    //console.log("update Task", response);
      return res;
   } catch (error:any) {
     console.error('error',error.message);
